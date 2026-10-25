@@ -1,0 +1,15 @@
+/* gx.css — оформление GSAP-анимаций; берёт цвета страницы, если они есть */
+.gx{--gx-fg:var(--fg,#222);--gx-muted:var(--muted,#6b6b6b);--gx-line:var(--line,#ddd);--gx-paper:var(--paper,#fff);--gx-acc:var(--accent,var(--hot,#b0283a));--gx-acc2:var(--hl2,var(--cold,#1d55b0));
+  margin:12px 0 0;background:var(--gx-paper);border:1px solid var(--gx-line);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.gx .figbar{font:500 12px var(--mono,ui-monospace,monospace);color:var(--gx-muted)}
+.gx svg{display:block;width:100%;height:auto;max-width:820px;margin:0 auto}
+.gx .ctrl{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.gx .ctrl button{min-width:44px;min-height:34px;font:500 14px inherit;color:var(--gx-fg);background:transparent;border:1px solid var(--gx-line);border-radius:6px;padding:4px 10px;cursor:pointer}
+.gx .ctrl button:hover,.gx .ctrl button:focus-visible{border-color:var(--gx-acc);outline:none}
+.gx .ctrl .cnt{font:500 12px var(--mono,ui-monospace,monospace);color:var(--gx-muted)}
+.gx .phase{margin:0;font-size:15px;line-height:1.5;min-height:3.2em;border-left:3px solid var(--gx-acc);padding:2px 0 2px 10px}
+.gx figcaption{font-size:13.5px;color:var(--gx-muted)}
+.gx .t{fill:var(--gx-fg);font:500 13px var(--body,var(--sans,system-ui))}
+.gx .ts{fill:var(--gx-muted);font:400 12px var(--body,var(--sans,system-ui))}
+.gx .tb{fill:var(--gx-fg);font:700 14px var(--body,var(--sans,system-ui))}
+@media (max-width:600px){.gx .t{font-size:var(--gxm-t,19px)}.gx .ts{font-size:var(--gxm-ts,18px)}.gx .tb{font-size:var(--gxm-tb,20px)}}

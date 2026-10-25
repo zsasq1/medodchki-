@@ -82,3 +82,19 @@
 3. `node _tools/slides.js файл.ppt outdir [с] [по]` — слайды презентаций в PNG.
 
 Список подписей рисунков с номерами страниц — в [`FIGURES.md`](FIGURES.md).
+
+## Анимации и 3D-модели (`_tools/kit/`)
+
+Всё подключается в страницу целиком (инлайн), внешние только библиотеки с CDN, точные версии:
+- GSAP 3.12.5 — `https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js`
+- three.js r128 — `https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js`, затем `https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js` и `.../examples/js/controls/OrbitControls.js`
+
+| Файл | Что даёт |
+|---|---|
+| `steps-gsap.js` + `gx.css` | `StepTL(fig, steps, build, opts)` — пошаговая GSAP-анимация: кнопки ◀ ▶/❚❚ ▶, «шаг N из M», автозапуск только на экране, без автозапуска при prefers-reduced-motion. Разметка: `<figure class="gx" id="…"><div class="figbar">…</div><svg></svg><p class="phase" aria-live="polite"></p><div class="ctrl" data-ctrl></div><figcaption>…</figcaption></figure>`. Текст внутри шага менять через `tl.call(...)`, не твином textContent. Крупные подписи на телефоне: `fig.style.setProperty('--gxm-t','24px')` (также `--gxm-ts`, `--gxm-tb`). |
+| `kit.js` + `kit.css` | Движок `Anim` (requestAnimationFrame) и модель ЭКГ `KIT.wave` — для ЭКГ-анимаций. |
+| `heart2d.js` | Анатомическое 2D-сердце с картой активации для синхронизации с ЭКГ. |
+| `viewer3d.js` | `Viewer3D(fig,{src:'3d/heart.glb.txt',view:'front',tour:[…]})` — 3D-модель с экскурсией (нужен `kit.js`). Пример экскурсий — `examples/v3d_blocks.py`. |
+| `examples/*_anim.js` | Готовые анимации: синапс и ганглиоблокаторы, патогенез и стадии лихорадки, пневмоторакс. |
+
+**3D-модели.** `python3 -I _tools/anat3d.py --preset heart|thorax|retroperitoneum|pelvis|urinary --out x.glb` (или `--match "регэксп"`, поиск названий `--list "rib"`). Готовые GLB — `assets/3d/`. В разборах модель кладётся в хаб как base64-текст `3d/<имя>.glb.txt` (артефакты не отдают .glb). Подпись обязательна: «3D-модель: BodyParts3D © The Database Center for Life Science, CC BY 4.0 (упрощена, обрезана, перекрашена)». Подробно — `assets/bodyparts3d/ATTRIBUTION.md`.

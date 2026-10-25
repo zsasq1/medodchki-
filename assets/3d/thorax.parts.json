@@ -1,0 +1,507 @@
+[
+[
+"1-е ребро левое",
+"Left first rib",
+"кость"
+],
+[
+"1-е ребро правое",
+"Right first rib",
+"кость"
+],
+[
+"1-й рёберный хрящ левый",
+"Left first costal cartilage",
+"хрящ"
+],
+[
+"1-й рёберный хрящ правый",
+"Right first costal cartilage",
+"хрящ"
+],
+[
+"10-е ребро левое",
+"Left tenth rib",
+"кость"
+],
+[
+"10-е ребро правое",
+"Right tenth rib",
+"кость"
+],
+[
+"11-е ребро левое",
+"Left eleventh rib",
+"кость"
+],
+[
+"11-е ребро правое",
+"Right eleventh rib",
+"кость"
+],
+[
+"12-е ребро левое",
+"Left twelfth rib",
+"кость"
+],
+[
+"12-е ребро правое",
+"Right twelfth rib",
+"кость"
+],
+[
+"2-е ребро левое",
+"Left second rib",
+"кость"
+],
+[
+"2-е ребро правое",
+"Right second rib",
+"кость"
+],
+[
+"2-й рёберный хрящ левый",
+"Left second costal cartilage",
+"хрящ"
+],
+[
+"2-й рёберный хрящ правый",
+"Right second costal cartilage",
+"хрящ"
+],
+[
+"3-е ребро левое",
+"Left third rib",
+"кость"
+],
+[
+"3-е ребро правое",
+"Right third rib",
+"кость"
+],
+[
+"3-й рёберный хрящ левый",
+"Left third costal cartilage",
+"хрящ"
+],
+[
+"3-й рёберный хрящ правый",
+"Right third costal cartilage",
+"хрящ"
+],
+[
+"4-е ребро левое",
+"Left fourth rib",
+"кость"
+],
+[
+"4-е ребро правое",
+"Right fourth rib",
+"кость"
+],
+[
+"4-й рёберный хрящ левый",
+"Left fourth costal cartilage",
+"хрящ"
+],
+[
+"4-й рёберный хрящ правый",
+"Right fourth costal cartilage",
+"хрящ"
+],
+[
+"5-е ребро левое",
+"Left fifth rib",
+"кость"
+],
+[
+"5-е ребро правое",
+"Right fifth rib",
+"кость"
+],
+[
+"5-й рёберный хрящ левый",
+"Left fifth costal cartilage",
+"хрящ"
+],
+[
+"5-й рёберный хрящ правый",
+"Right fifth costal cartilage",
+"хрящ"
+],
+[
+"6-е ребро левое",
+"Left sixth rib",
+"кость"
+],
+[
+"6-е ребро правое",
+"Right sixth rib",
+"кость"
+],
+[
+"6-й рёберный хрящ левый",
+"Left sixth costal cartilage",
+"хрящ"
+],
+[
+"6-й рёберный хрящ правый",
+"Right sixth costal cartilage",
+"хрящ"
+],
+[
+"7-е ребро левое",
+"Left seventh rib",
+"кость"
+],
+[
+"7-е ребро правое",
+"Right seventh rib",
+"кость"
+],
+[
+"7-й рёберный хрящ левый",
+"Left seventh costal cartilage",
+"хрящ"
+],
+[
+"7-й рёберный хрящ правый",
+"Right seventh costal cartilage",
+"хрящ"
+],
+[
+"8-е ребро левое",
+"Left eighth rib",
+"кость"
+],
+[
+"8-е ребро правое",
+"Right eighth rib",
+"кость"
+],
+[
+"9-е ребро левое",
+"Left ninth rib",
+"кость"
+],
+[
+"9-е ребро правое",
+"Right ninth rib",
+"кость"
+],
+[
+"Th1",
+"First thoracic vertebra",
+"кость"
+],
+[
+"Th10",
+"Tenth thoracic vertebra",
+"кость"
+],
+[
+"Th11",
+"Eleventh thoracic vertebra",
+"кость"
+],
+[
+"Th12",
+"Twelfth thoracic vertebra",
+"кость"
+],
+[
+"Th2",
+"Second thoracic vertebra",
+"кость"
+],
+[
+"Th3",
+"Third thoracic vertebra",
+"кость"
+],
+[
+"Th4",
+"Fourth thoracic vertebra",
+"кость"
+],
+[
+"Th5",
+"Fifth thoracic vertebra",
+"кость"
+],
+[
+"Th6",
+"Sixth thoracic vertebra",
+"кость"
+],
+[
+"Th7",
+"Seventh thoracic vertebra",
+"кость"
+],
+[
+"Th8",
+"Eighth thoracic vertebra",
+"кость"
+],
+[
+"Th9",
+"Ninth thoracic vertebra",
+"кость"
+],
+[
+"верхний язычковый бронх",
+"Superior lingular bronchial tree",
+"дыхательные пути"
+],
+[
+"верхняя полая вена",
+"Superior vena cava",
+"вена"
+],
+[
+"восходящая аорта",
+"Ascending aorta",
+"артерия"
+],
+[
+"грудная аорта",
+"Descending thoracic aorta",
+"артерия"
+],
+[
+"диафрагма",
+"Diaphragm",
+"мышца"
+],
+[
+"дуга аорты",
+"Arch of aorta",
+"артерия"
+],
+[
+"латеральный сегментарный бронх (средняя доля)",
+"Lateral segmental bronchial tree",
+"дыхательные пути"
+],
+[
+"левая верхняя лёгочная вена",
+"Left superior pulmonary vein",
+"лёгочная вена"
+],
+[
+"левая доля тимуса",
+"Left lobe of thymus",
+"железа"
+],
+[
+"левая лёгочная артерия",
+"Left pulmonary artery",
+"лёгочная артерия"
+],
+[
+"левая нижняя лёгочная вена",
+"Left inferior pulmonary vein",
+"лёгочная вена"
+],
+[
+"левая общая сонная артерия",
+"Left common carotid artery",
+"артерия"
+],
+[
+"левая плечеголовная вена",
+"Left brachiocephalic vein",
+"вена"
+],
+[
+"левая подключичная артерия",
+"Left subclavian artery",
+"артерия"
+],
+[
+"левый верхний сегментарный бронх",
+"Left superior segmental bronchial tree",
+"дыхательные пути"
+],
+[
+"левый верхушечный сегментарный бронх",
+"Left apical segmental bronchial tree",
+"дыхательные пути"
+],
+[
+"левый главный бронх",
+"Left main bronchus",
+"дыхательные пути"
+],
+[
+"левый задний базальный сегментарный бронх",
+"Left posterior basal segmental bronchial tree",
+"дыхательные пути"
+],
+[
+"левый задний сегментарный бронх",
+"Left posterior segmental bronchial tree",
+"дыхательные пути"
+],
+[
+"левый латеральный базальный сегментарный бронх",
+"Left lateral basal segmental bronchial tree",
+"дыхательные пути"
+],
+[
+"левый медиальный базальный сегментарный бронх",
+"Left medial basal segmental bronchial tree",
+"дыхательные пути"
+],
+[
+"левый передний базальный сегментарный бронх",
+"Left anterior basal segmental bronchial tree",
+"дыхательные пути"
+],
+[
+"левый передний сегментарный бронх",
+"Left anterior segmental bronchial tree",
+"дыхательные пути"
+],
+[
+"лёгочный ствол",
+"Pulmonary trunk",
+"лёгочная артерия"
+],
+[
+"медиальный сегментарный бронх (средняя доля)",
+"Medial segmental bronchial tree",
+"дыхательные пути"
+],
+[
+"мечевидный отросток",
+"Xiphoid process",
+"кость"
+],
+[
+"непарная вена",
+"Azygos vein",
+"вена"
+],
+[
+"нижний язычковый бронх",
+"Inferior lingular bronchial tree",
+"дыхательные пути"
+],
+[
+"пищевод",
+"Esophagus",
+"пищеварительная"
+],
+[
+"плечеголовной ствол",
+"Brachiocephalic artery",
+"артерия"
+],
+[
+"полунепарная вена",
+"Hemiazygos vein",
+"вена"
+],
+[
+"правая верхняя лёгочная вена",
+"Right superior pulmonary vein",
+"лёгочная вена"
+],
+[
+"правая доля тимуса",
+"Right lobe of thymus",
+"железа"
+],
+[
+"правая лёгочная артерия",
+"Right pulmonary artery",
+"лёгочная артерия"
+],
+[
+"правая нижняя лёгочная вена",
+"Right inferior pulmonary vein",
+"лёгочная вена"
+],
+[
+"правая плечеголовная вена",
+"Right brachiocephalic vein",
+"вена"
+],
+[
+"правый верхний сегментарный бронх",
+"Right superior segmental bronchial tree",
+"дыхательные пути"
+],
+[
+"правый верхушечный сегментарный бронх",
+"Right apical segmental bronchial tree",
+"дыхательные пути"
+],
+[
+"правый главный бронх",
+"Right main bronchus proper",
+"дыхательные пути"
+],
+[
+"правый задний базальный сегментарный бронх",
+"Right posterior basal segmental bronchial tree",
+"дыхательные пути"
+],
+[
+"правый задний сегментарный бронх",
+"Right posterior segmental bronchial tree",
+"дыхательные пути"
+],
+[
+"правый латеральный базальный сегментарный бронх",
+"Right lateral basal segmental bronchial tree",
+"дыхательные пути"
+],
+[
+"правый медиальный базальный сегментарный бронх",
+"Right medial basal segmental bronchial tree",
+"дыхательные пути"
+],
+[
+"правый передний базальный сегментарный бронх",
+"Right anterior basal segmental bronchial tree",
+"дыхательные пути"
+],
+[
+"правый передний сегментарный бронх",
+"Right anterior segmental bronchial tree",
+"дыхательные пути"
+],
+[
+"рукоятка грудины",
+"Manubrium",
+"кость"
+],
+[
+"стенка левого предсердия",
+"Wall of left atrium",
+"миокард"
+],
+[
+"стенка правого предсердия",
+"Wall of right atrium",
+"миокард"
+],
+[
+"стенки желудочков",
+"Wall of ventricle",
+"миокард"
+],
+[
+"тело грудины",
+"Body of sternum",
+"кость"
+],
+[
+"трахея",
+"Trachea",
+"дыхательные пути"
+]
+]
