@@ -94,6 +94,7 @@
 | `steps-gsap.js` + `gx.css` | `StepTL(fig, steps, build, opts)` — пошаговая GSAP-анимация: кнопки ◀ ▶/❚❚ ▶, «шаг N из M», автозапуск только на экране, без автозапуска при prefers-reduced-motion. Разметка: `<figure class="gx" id="…"><div class="figbar">…</div><svg></svg><p class="phase" aria-live="polite"></p><div class="ctrl" data-ctrl></div><figcaption>…</figcaption></figure>`. Текст внутри шага менять через `tl.call(...)`, не твином textContent. Крупные подписи на телефоне: `fig.style.setProperty('--gxm-t','24px')` (также `--gxm-ts`, `--gxm-tb`). |
 | `kit.js` + `kit.css` | Движок `Anim` (requestAnimationFrame) и модель ЭКГ `KIT.wave` — для ЭКГ-анимаций. |
 | `heart2d.js` | Анатомическое 2D-сердце с картой активации для синхронизации с ЭКГ. |
+| `excite3d.js` | `Excite3D(fig,{src:'3d/heart.glb.txt',cond,phases})` — 3D-сердце с проводящей системой (СА- и AV-узлы, пучок Гиса, ножки, волокна Пуркинье) и волной возбуждения по стенкам, синхронно с бегущей ЭКГ; кнопки фаз P–PQ–Q–R–S–ST–T. `cond` — `assets/3d/heart_conduction.json` (строится `_tools/heart_conduction.py`: проводящей системы в BodyParts3D нет, она нанесена по ориентирам модели). Пример фаз со ссылками на кардио.pdf — `examples/ex3d_blocks.py`. |
 | `viewer3d.js` | `Viewer3D(fig,{src:'3d/heart.glb.txt',view:'front',tour:[…]})` — 3D-модель с экскурсией (нужен `kit.js`). Пример экскурсий — `examples/v3d_blocks.py`. |
 | `examples/*_anim.js` | Готовые анимации: синапс и ганглиоблокаторы, патогенез и стадии лихорадки, пневмоторакс. |
 
