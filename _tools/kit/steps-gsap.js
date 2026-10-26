@@ -18,7 +18,7 @@ function StepTL(fig,steps,build,opts={}){
   function sync(){const t=tl.time();let i=0;for(let k=0;k<n;k++)if(t>=at[k]-1e-6)i=k;if(i!==cur){cur=i;ph.innerHTML=steps[i].label;cnt.textContent='шаг '+(i+1)+' из '+n;opts.onStep&&opts.onStep(i)}}
   tl.eventCallback('onUpdate',sync);
   const setBtn=p=>{pb.textContent=p?'❚❚':'▶';pb.setAttribute('aria-label',p?'Пауза':'Пуск')};
-  function go(i){tl.pause();setBtn(false);user=true;tl.seek(at[i],true);tl.seek(Math.max(0,at[i+1]-0.001),false);sync()} /* сначала к началу шага без событий, затем вперёд: tl.call внутри шага срабатывают по порядку */
+  function go(i){tl.pause();setBtn(false);user=true;tl.seek(0,true);tl.seek(Math.max(0,at[i+1]-0.001),false);sync()} /* с нуля без событий, затем вперёд до конца шага: все set/fromTo/call проигрываются по порядку (надёжно и при переходе назад) */
   ctrl.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const a=b.dataset.a;
     if(a==='play'){if(tl.paused()||!tl.isActive()){user=false;if(tl.progress()>=1)tl.seek(0);tl.play();setBtn(true)}else{tl.pause();user=true;setBtn(false)}}
     else go(((cur<0?0:cur)+(a==='next'?1:-1)+n)%n)});
