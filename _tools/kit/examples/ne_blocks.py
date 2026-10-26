@@ -1,12 +1,8 @@
 SEC='''
   <h3 id="norm-el">Нормальная ЭКГ по элементам</h3>
-  <p>Нажмите на элемент — он подсветится на кривой, рядом появятся мерка и карточка: что отражает, где искать, норма по методичке, с чем не путать. Кнопка «▶ по порядку» проводит по всем элементам цикла.</p>
+  <p>Нажмите на элемент — он подсветится на кривой, рядом появятся мерка и карточка: что отражает, где искать, норма по методичке, с чем не путать. Ниже тот же элемент показан во всех 12 отведениях: подписи говорят, где так и должно быть, где в норме бывает, а где это уже отклонение; кнопка «Как выглядит отклонение» рисует примеры патологии красным. «▶ по порядку» проводит по всем элементам.</p>
   <figure class="gx ne"><div class="figbar">Разбор одного цикла · схема составлена для сайта, не из методички</div><div id="ne-a"></div>
-  <figcaption>Кривая построена так, что все величины лежат в нормах методички (с. 88–89): P 0,09 с и 1,5 мм, PQ 0,16 с, QRS 0,09 с, R 11 мм, QRST 0,37 с, R–R 0,80 с. Зубец U в методичке только назван (с. 87), норм для него нет — поэтому он не нарисован.</figcaption></figure>
-  <h3>Нормальная ЭКГ в 12 отведениях</h3>
-  <p>Форма комплекса зависит от отведения. Переключайте, что показать: подсвеченная часть и подписи меняются.</p>
-  <figure class="gx ne"><div class="figbar">12 отведений в норме · схема для сайта</div><div id="ne-b"></div>
-  <figcaption>Амплитуды подобраны в пределах норм методички (с. 88–92); у реальных людей они заметно различаются.</figcaption></figure>
+  <figcaption>Кривые построены так, что все величины лежат в нормах методички (с. 88–89): P 0,09 с и 1,5 мм, PQ 0,16 с, QRS 0,09 с, R 11 мм, QRST 0,37 с, R–R 0,80 с. Зубец U в методичке только назван (с. 87), норм для него нет — поэтому он не нарисован. Примеры отклонений — учебные схемы по критериям методички.</figcaption></figure>
   <h3>Как не перепутать</h3>
   <div class="tbl"><table>
     <tr><th>Похожие</th><th>Как отличить</th></tr>
@@ -39,4 +35,19 @@ CSS='''
 .ne-note{border-left:3px solid var(--accent);padding-left:10px;margin:8px 0 0}
 '''
 CSS+='''@media (max-width:600px){.ne-mk,.ne-num{font-size:2.3px}.ne-ld{font-size:2.8px}.ne-bt{font-size:2.3px}}
+'''
+CSS+='''
+/* ЭКГ-бумага всегда светлая, как настоящая — и в тёмной теме */
+.qz-bg{fill:#fffdfd}.qz-g1{stroke:#f4d0d4}.qz-g5{stroke:#e7a2ab}.qz-tr{stroke:#1b1416}.qz-ld,.ne-ld{fill:#1b1416}.qz-sep{stroke:#1b1416}
+.ne-l{fill:#6b5c5e}.ne-l.on{fill:#c0283a}.ne-hl{stroke:#c0283a}.ne-band{fill:#c0283a;opacity:.12}.ne-bt,.ne-num{fill:#1d55b0}.ne-br,.ne-dim{stroke:#1d55b0}.ne-iso{stroke:#c0283a}
+.qz-tr.ne-bad{stroke:#c0283a;stroke-width:.42}
+.ne-mk{font:700 1.6px var(--body)}.ne-mk.ok{fill:#1f6b52}.ne-mk.may{fill:#8a5a00}.ne-mk.no,.ne-mk.bad{fill:#c0283a}
+.ne-12{max-width:760px;margin:0 auto}.ne-12 .qz-tr{stroke-width:.3}
+.ne-h12{margin:14px 0 6px;font-size:16px}
+.ne-mode{display:flex;gap:6px;flex-wrap:wrap}.ne-mode button{font-size:13px;padding:4px 10px}.ne-mode button[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft,transparent);font-weight:600}
+.ne-leg{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:13px;margin:6px 0 0}.ne-leg .l-ok{color:var(--ok,#1f6b52)}.ne-leg .l-may{color:var(--warn,#8a5a00)}.ne-leg .l-no,.ne-leg .l-bad{color:var(--hot,#c0283a)}
+.ne-nb{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}@media (max-width:640px){.ne-nb{grid-template-columns:1fr}}
+.ne-nb>div{border:1px solid var(--line);border-radius:8px;padding:8px 10px}.ne-nb h5{margin:0 0 4px;font-size:14px}.ne-nb ul{margin:0;padding-left:1.1em}
+.ne-ok{border-left:4px solid var(--ok,#1f6b52)!important}.ne-no{border-left:4px solid var(--hot,#c0283a)!important}
+@media (max-width:600px){.ne-mk{font-size:2.1px}}
 '''

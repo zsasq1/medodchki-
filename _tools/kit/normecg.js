@@ -92,50 +92,103 @@ function partA(root){
    <div class="qz-strip ne-wide"><svg id="ne-svgA" class="qz-svg" role="img" aria-label="Нормальный кардиоцикл во II отведении"></svg></div>
    <p class="qz-scale">II отведение · 50 мм/с: маленькая клетка = 0,02 с, большая = 0,10 с · 10 мм/мВ: маленькая клетка = 0,1 мВ</p>
    <div class="ne-tour"><button type="button" data-a="tour">▶ по порядку</button><button type="button" data-a="prev">◀</button><button type="button" data-a="next">▶</button><span class="ne-cnt"></span></div>
-   <div class="ne-card" aria-live="polite"></div>`;
+   <div class="ne-card" aria-live="polite"></div>
+   <h4 class="ne-h12">Этот элемент во всех 12 отведениях</h4>
+   <div class="ne-mode" role="group" aria-label="Что показать"><button type="button" data-m="norm" aria-pressed="true">Норма</button><button type="button" data-m="abn" aria-pressed="false">Как выглядит отклонение</button></div>
+   <div class="qz-strip"><svg id="ne-svg12" class="qz-svg ne-12" role="img" aria-label="Выбранный элемент в 12 отведениях"></svg></div>
+   <p class="ne-leg"><span class="l-ok">● так в норме</span><span class="l-may">● в норме бывает</span><span class="l-no">● так быть не должно</span><span class="l-bad">— красная кривая: пример отклонения</span></p>
+   <div class="ne-nbw" aria-live="polite"></div>`;
   const svg=root.querySelector('svg'),cardEl=root.querySelector('.ne-card'),chips=[...root.querySelectorAll('.ne-chips button')],cnt=root.querySelector('.ne-cnt');let i=0,timer=null;
-  const show=k=>{i=EL.findIndex(e=>e.k===k);const S=drawA(svg,{qs:[.26,1.06],t0:0,t1:1.2,mmps:50,sel:k});cardEl.innerHTML=card(EL[i],S.B[0]);chips.forEach(c=>c.setAttribute('aria-pressed',c.dataset.k===k));cnt.textContent=`${i+1} из ${EL.length}`};
+  const s12=root.querySelector('#ne-svg12'),nbw=root.querySelector('.ne-nbw');let mode='norm';
+  const show=k=>{i=EL.findIndex(e=>e.k===k);const S=drawA(svg,{qs:[.26,1.06],t0:0,t1:1.2,mmps:50,sel:k});cardEl.innerHTML=card(EL[i],S.B[0]);chips.forEach(c=>c.setAttribute('aria-pressed',c.dataset.k===k));cnt.textContent=`${i+1} из ${EL.length}`;
+    draw12(s12,k,mode);nbw.innerHTML=nbHTML(k,mode)};
+  root.querySelector('.ne-mode').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;mode=b.dataset.m;root.querySelectorAll('.ne-mode button').forEach(x=>x.setAttribute('aria-pressed',x===b));show(EL[i].k)});
   root.querySelector('.ne-chips').addEventListener('click',e=>{const b=e.target.closest('button');if(b){stop();show(b.dataset.k)}});
   const stop=()=>{if(timer){clearInterval(timer);timer=null;root.querySelector('[data-a=tour]').textContent='▶ по порядку'}};
   root.querySelector('.ne-tour').addEventListener('click',e=>{const a=e.target.closest('button')?.dataset.a;if(!a)return;
     if(a==='tour'){if(timer){stop();return}e.target.textContent='❚❚ пауза';show(EL[(i+1)%EL.length].k);timer=setInterval(()=>show(EL[(i+1)%EL.length].k),4500)}
     else{stop();show(EL[(i+(a==='next'?1:-1)+EL.length)%EL.length].k)}});
   show('P')}
-/* ---------- B: 12 отведений ---------- */
+/* ---------- B: элемент во всех 12 отведениях — где норма, где отклонение ---------- */
 const LD={I:{p:.08,q:[[0,0],[.012,-.05],[.04,.7],[.065,-.1],[.09,0]],t:.2},II:{p:.15,q:[[0,0],[.012,-.1],[.04,1.1],[.065,-.25],[.09,0]],t:.3},III:{p:.07,q:[[0,0],[.014,-.05],[.042,.5],[.066,-.15],[.09,0]],t:.1},
  aVR:{p:-.1,q:[[0,0],[.042,-.85],[.09,0]],t:-.25},aVL:{p:.03,q:[[0,0],[.035,.35],[.062,-.2],[.09,0]],t:.1},aVF:{p:.1,q:[[0,0],[.013,-.07],[.041,.8],[.066,-.18],[.09,0]],t:.2},
  V1:{p:.07,q:[[0,0],[.025,.25],[.055,-1.0],[.09,0]],t:.1},V2:{p:.08,q:[[0,0],[.028,.45],[.058,-1.2],[.09,0]],t:.4},V3:{p:.08,q:[[0,0],[.03,.8],[.06,-.8],[.09,0]],t:.45},
  V4:{p:.08,q:[[0,0],[.036,1.4],[.065,-.4],[.09,0]],t:.45},V5:{p:.07,q:[[0,0],[.012,-.08],[.038,1.3],[.075,0]],t:.35},V6:{p:.06,q:[[0,0],[.012,-.08],[.038,1.1],[.075,0]],t:.3}};
 const GRID=[['I','II','III'],['aVR','aVL','aVF'],['V1','V2','V3'],['V4','V5','V6']];
+const Q0=.26,TW=[.02,.66];
+function geo(l,m={}){const L=LD[l],pq=m.pq??.16,pd=m.pd??.09,pts=m.q??L.q,qd=pts[pts.length-1][0],ts=Q0+qd+.1+(m.tShift||0),te=ts+.18;
+  return{L,pq,pd,pts,qd,P:[Q0-pq,Q0-pq+pd],QRS:[Q0,Q0+qd],ST:[Q0+qd,ts],T:[ts,te],QT:[Q0,te],PQ:[Q0-pq,Q0],PQs:[Q0-pq+pd,Q0],pa:m.p??L.p,ta:m.t??L.t,st:m.st||0,tSym:m.tSym,bif:m.pBif}}
+function leadV(l,t,m){const g=geo(l,m);let v=0;
+  if(t>=g.P[0]&&t<=g.P[1]){const k=(t-g.P[0])/g.pd;v+=g.bif?g.pa*(.85*Math.exp(-(((k-.3)/.16)**2))+.9*Math.exp(-(((k-.72)/.16)**2))):g.pa*Math.sin(Math.PI*k)**2}
+  if(t>=g.QRS[0]&&t<=g.QRS[1])v+=lerp(g.pts.map(([a,b])=>[Q0+a,b]),t);
+  if(g.st&&t>g.QRS[1]-.005&&t<g.T[1]){const a=g.QRS[1],b=g.T[0]+.09;v+=g.st*Math.min(1,(t-a)/.02)*(t>b?Math.max(0,1-(t-b)/.07):1)}
+  if(t>=g.T[0]&&t<=g.T[1]){const pk=g.tSym?g.T[0]+.09:g.T[0]+.11;v+=t<pk?g.ta*Math.sin(Math.PI/2*(t-g.T[0])/(pk-g.T[0]))**2:g.ta*Math.cos(Math.PI/2*(t-pk)/(g.T[1]-pk))**2}
+  return v}
+const OK='ok',MAY='may',NO='no';
+const V12={
+ P:{mark:{II:[OK,'(+) всегда'],aVR:[OK,'(−) — норма'],I:[OK,'(+)'],aVF:[OK,'(+)'],V1:[MAY,'бывает двухфазным']},
+  norm:[`(+) во II — всегда, (−) в aVR ${SRC(88)}`,`не шире 0,10 с и не выше 2,5 мм, туповершинный ${SRC(88)}`,`одинаковой формы в одном отведении ${SRC(90)}`],
+  bad:[`P (−) во II или нет P перед QRS — ритм не синусовый: предсердный, узловой ${SRC('90, 95')}`,`P выше 2,5 мм, острый во II, III, aVF — P-pulmonale ${SRC(104)}`,`P шире 0,10 с, двугорбый в I, II, aVL — P-mitrale ${SRC(105)}`,`вместо P волны f или F — фибрилляция или трепетание предсердий ${SRC(99)}`],
+  abn:{II:{p:-.12,label:'P (−) во II'},III:{p:.32,pd:.07,label:'P 3 мм, острый'},I:{p:.1,pd:.12,pBif:true,label:'P 0,12 с, двугорбый'}}},
+ PQs:{mark:{II:[OK,'обычно меряют здесь']},note:`Длина сегмента и интервала PQ одинакова во всех отведениях: это время проведения, а не форма. Меряют обычно во II ${SRC(93)}.`,
+  norm:[`сегмент PQ лежит на изолинии ${SRC(88)}`],bad:[`методичка сегмент отдельно не оценивает; оценивают весь интервал PQ: больше 0,20 с — AV-блокада I степени ${SRC(101)}`],
+  abn:{II:{pq:.28,label:'PQ 0,28 с'}}},
+ PQ:{mark:{II:[OK,'обычно меряют здесь']},note:`Интервал PQ одинаков во всех отведениях. Меряют обычно во II ${SRC(93)}.`,
+  norm:[`0,12–0,20 с ${SRC(88)}`],bad:[`больше 0,20 с — AV-блокада I степени ${SRC(101)}`,`меньше 0,12 с — предсердный ритм ${SRC(95)} или WPW с Δ-волной ${SRC(104)}`],
+  abn:{II:{pq:.28,label:'PQ 0,28 с > 0,20'},V5:{pq:.09,label:'PQ 0,09 с < 0,12'}}},
+ Q:{mark:{I:[OK,'q — норма'],II:[OK,'q — норма'],aVF:[OK,'q — норма'],V5:[OK,'q — норма'],V6:[OK,'q — норма'],aVR:[OK,'QS — норма'],V1:[NO,'Q быть не должно'],V2:[NO,'Q быть не должно'],V3:[NO,'Q быть не должно']},
+  norm:[`маленький q: глубина не больше ¼ R, до 0,03 с, без зазубрин ${SRC(88)}`,`в aVR возможен глубокий Q, вплоть до QS ${SRC(88)}`,`в каких отведениях маленький q обычно есть (I, II, aVF, V5–V6) ${U}`],
+  bad:[`любой Q в V1–V3 ${SRC(88)}`,`Q глубже ¼ R, шире 0,03 с или зазубренный — патологический: признак инфаркта ${SRC('88, 108')}`],
+  abn:{V2:{q:[[0,0],[.025,-.7],[.05,-1.1],[.09,0]],label:'QS в V2'},II:{q:[[0,0],[.02,-.45],[.045,.6],[.07,-.2],[.09,0]],label:'Q 4,5 мм при R 6 мм'}}},
+ R:{mark:{aVR:[MAY,'мал или нет — норма'],V1:[OK,'r маленький'],V4:[OK,'R максимальный'],II:[OK,'RII > RI > RIII']},num:true,
+  norm:[`есть во всех отведениях; в aVR может быть малым или отсутствовать ${SRC(89)}`,`5–15 мм, остроконечный, без зазубрин ${SRC(89)}`,`в грудных растёт от V1 к V4, затем снижается к V6 ${SRC(89)}`,`R<sub>II</sub> > R<sub>I</sub> > R<sub>III</sub> — нормальное положение оси ${SRC(92)}`],
+  bad:[`R<sub>V1</sub> > 7 мм — гипертрофия правого желудочка ${SRC(106)}`,`R<sub>V5–6</sub> > 25 мм — гипертрофия левого желудочка ${SRC(106)}`,`R<sub>max</sub> < 5 мм и R<sub>I</sub> + R<sub>II</sub> + R<sub>III</sub> < 15 мм — низкий вольтаж ${SRC(91)}`,`расщеплённый R′ в V1–V2 — блокада правой ножки ${SRC(102)}`],
+  abn:{V1:{q:[[0,0],[.035,1.0],[.065,-.2],[.09,0]],t:-.2,label:'R<sub>V1</sub> 10 мм'.replace(/<\/?sub>/g,'')},V5:{q:[[0,0],[.012,-.08],[.038,2.8],[.075,0]],t:-.2,label:'RV5 28 мм'}}},
+ S:{mark:{V1:[OK,'S глубокий'],V3:[OK,'R = S'],V5:[NO,'S быть не должно'],V6:[NO,'S быть не должно']},
+  norm:[`в грудных уменьшается от V1 к V4 ${SRC(89)}`,`R = S — переходная зона, в норме V3 ${SRC(89)}`],
+  bad:[`S в V5–V6 — поворот сердца против часовой стрелки, увеличение правых отделов, блокада правой ножки ${SRC(89)}`,`S<sub>V1–2</sub> + R<sub>V5–6</sub> > 35 мм — гипертрофия левого желудочка ${SRC(106)}`],
+  abn:{V6:{q:[[0,0],[.012,-.08],[.038,.8],[.065,-.5],[.09,0]],label:'S в V6'}}},
+ QRS:{mark:{aVR:[OK,'QS — норма']},note:`Ширина QRS одинакова во всех отведениях, форма — разная.`,
+  norm:[`0,06–0,10 с ${SRC(88)}`,`в aVR — отрицательный комплекс QS ${SRC(89)}`],
+  bad:[`0,10–0,12 с — неполная, больше 0,12 с — полная блокада ножки ${SRC(102)}`,`широкий деформированный QRS без P — желудочковый комплекс ${SRC('96, 98')}`],
+  abn:{V1:{q:[[0,0],[.02,.3],[.05,-.35],[.095,.9],[.14,0]],t:-.2,label:'QRS 0,14 с, rSR′'}}},
+ ST:{mark:{V1:[MAY,'подъём до 2 мм'],V2:[MAY,'подъём до 2 мм'],V3:[MAY,'подъём до 2 мм'],V5:[MAY,'снижение до 0,5 мм'],V6:[MAY,'снижение до 0,5 мм']},
+  norm:[`на изолинии ${SRC(89)}`,`в V1–V3 допускается подъём не больше 2 мм ${SRC(89)}`,`в V5–V6 допускается снижение не больше 0,5 мм ${SRC(89)}`],
+  bad:[`подъём ST — повреждение: острейшая и острая стадии ИМ; где именно — по отведениям ${SRC('108–110')}`,`снижение ST больше 1 мм — ишемия ${SRC(107)}`,`снижение ST в отведениях противоположной стенки — реципрокные изменения ${SRC(110)}`],
+  abn:{II:{st:.3,t:.4,label:'ST ↑ 3 мм'},III:{st:.3,t:.35,label:'ST ↑'},aVF:{st:.3,t:.35,label:'ST ↑'},aVL:{st:-.15,label:'ST ↓ реципрокно'},V5:{st:-.15,label:'ST ↓ 1,5 мм'}}},
+ T:{mark:{aVR:[OK,'(−) — норма'],III:[MAY,'может быть (−)'],aVL:[MAY,'может быть (−)'],V1:[MAY,'маленький'],V6:[OK,'T V6 > T V1']},
+  norm:[`по направлению совпадает с R, т.е. (+); в aVR (−) ${SRC(89)}`,`в aVL может быть (−) при вертикальной оси, в III — при горизонтальной ${SRC(89)}`,`высота в отведениях от конечностей около 5 мм, в грудных до 15 мм; T<sub>V6</sub> > T<sub>V1</sub> ${SRC(89)}`,`туповершинный, асимметричный ${SRC(89)}`],
+  bad:[`T (−) там, где R положительный (I, II, V3–V6) — ишемия, инфаркт, перегрузка при гипертрофии ${SRC('106–109')}`,`высокий, симметричный, островерхий T — ишемия ${SRC(107)}`,`отрицательный симметричный островерхий («коронарный») T — интрамуральный ИМ ${SRC(111)}`],
+  abn:{V5:{t:-.3,tSym:true,label:'T (−) в V5'},V3:{t:.95,tSym:true,label:'высокий острый T'}}},
+ QT:{mark:{II:[OK,'обычно меряют здесь']},note:`Длительность QRST одинакова во всех отведениях.`,
+  norm:[`до 0,40 с, меняется с ЧСС ${SRC(89)}`],bad:[`длиннее 0,40 с при обычной ЧСС — удлинение ${SRC(89)}; точнее оценивают с поправкой на ЧСС (QTc) ${U}`],
+  abn:{II:{tShift:.1,label:'QRST 0,47 с'}}},
+ RR:{note:`R–R — общий ритм сердца, он одинаков во всех отведениях. Ритм и ЧСС оценивают по II и длинной записи ${SRC(93)}.`,
+  norm:[`разница между R–R не больше 0,10 с — ритм правильный ${SRC(90)}`,`ЧСС 60–90 в мин; при ЧСС ≈ 70 R–R ≈ 0,80 с ${SRC('89–91')}`],
+  bad:[`ЧСС меньше 60 — брадикардия, больше 90 — тахикардия ${SRC(91)}`,`R–R отличаются больше чем на 0,10 с — ритм неправильный: синусовая аритмия, экстрасистолия, фибрилляция предсердий ${SRC(90)}`],abn:{}},
+ iso:{note:`Изолиния одинакова во всех отведениях.`,norm:[`ровные отрезки PQ и TP ${SRC(88)}`],bad:[`волны f вместо изолинии и P — фибрилляция предсердий; пила F — трепетание ${SRC(99)}`],abn:{}}};
+const RANGE={P:'P',PQs:'PQs',PQ:'PQ',Q:'Q',R:'R',S:'S',QRS:'QRS',ST:'ST',T:'T',QT:'QT',iso:'iso'};
+function draw12(svg,k,mode){const V=V12[k]||{},cw=18,mm=25;let rows='',y=0;
+  const mods=mode==='abn'?(V.abn||{}):{};
+  const rowR=GRID[0].map((_,ri)=>{let mx=.3,mn=-.3;GRID.forEach(c=>{const l=c[ri];for(let t=TW[0];t<=TW[1];t+=.004){const v=leadV(l,t,mods[l]);mx=Math.max(mx,v);mn=Math.min(mn,v)}});return[mx,mn]});
+  GRID[0].forEach((_,ri)=>{const [mx,mn]=rowR[ri],base=y+5+mx*10,hh=(mx-mn)*10+11;
+    GRID.forEach((c,ci)=>{const l=c[ri],x0=ci*cw,m=mods[l],X=t=>x0+(t-TW[0])*mm,Y=v=>base-v*10;let d='';
+      for(let t=TW[0];t<=TW[1]+1e-9;t+=.002)d+=(d?'L':'M')+X(t).toFixed(2)+' '+Y(leadV(l,t,m)).toFixed(2);
+      const g=geo(l,m);let hl='';
+      const rgs=k==='iso'?[g.PQs,[g.T[1],TW[1]]]:k==='Q'?[[Q0,Q0+.028]]:k==='R'?[[Q0+.01,Q0+.07]]:k==='S'?[[Q0+.045,g.QRS[1]]]:g[k]?[g[k]]:[];
+      rgs.forEach(r=>{let s='';for(let t=r[0];t<=r[1]+1e-9;t+=.001)s+=(s?'L':'M')+X(t).toFixed(2)+' '+Y(leadV(l,t,m)).toFixed(2);hl+=`<rect x="${X(r[0])}" y="${y}" width="${X(r[1])-X(r[0])}" height="${hh}" class="ne-band"/><path d="${s}" class="ne-hl"/>`});
+      rows+=hl+`<path d="${d}" class="qz-tr${m?' ne-bad':''}"/><text x="${x0+1}" y="${y+3.4}" class="ne-ld">${l}</text>`;if(ci)rows+=`<line x1="${x0}" x2="${x0}" y1="${y}" y2="${y+hh}" class="qz-sep"/>`;
+      if(V.num&&mode!=='abn'&&/^V/.test(l)){const r=ext(LD[l].q,1)*10;rows+=`<text x="${x0+cw-1}" y="${y+3.4}" class="ne-num" text-anchor="end">R ${f1(r)}</text>`}
+      const mk=m?['bad',m.label]:(mode==='abn'?null:(V.mark||{})[l]);
+      if(mk){const t=mk[1],sp=t.length>13?t.lastIndexOf(' ',Math.ceil(t.length/2)+2):-1,ls=sp>0?[t.slice(0,sp),t.slice(sp+1)]:[t];rows+=`<text x="${x0+cw-.8}" y="${y+hh-1.3-(ls.length-1)*2}" class="ne-mk ${mk[0]}" text-anchor="end">${ls.map((z,i)=>`<tspan x="${x0+cw-.8}" dy="${i?2:0}">${z}</tspan>`).join('')}</text>`}});
+    y+=hh});
+  const W=GRID.length*cw;svg.setAttribute('viewBox',`0 0 ${W} ${y}`);
+  svg.innerHTML=`<defs><pattern id="${svg.id}-p" width="5" height="5" patternUnits="userSpaceOnUse"><path d="M1 0V5M2 0V5M3 0V5M4 0V5M0 1H5M0 2H5M0 3H5M0 4H5" class="qz-g1"/><path d="M0 0H5M0 0V5" class="qz-g5"/></pattern></defs><rect width="${W}" height="${y}" class="qz-bg"/><rect width="${W}" height="${y}" fill="url(#${svg.id}-p)"/>${rows}`}
 const ext=(pts,s)=>pts.reduce((m,[,v])=>s>0?Math.max(m,v):Math.min(m,v),0);
-function leadV(l,t){const L=LD[l],q=.2;let v=0;if(t>=q-.16&&t<=q-.07)v+=L.p*Math.sin(Math.PI*(t-q+.16)/.09)**2;if(t>=q&&t<=q+.09)v+=lerp(L.q.map(([a,b])=>[q+a,b]),t);
-  if(t>=q+.19&&t<=q+.37){const pk=q+.30;v+=t<pk?L.t*Math.sin(Math.PI/2*(t-q-.19)/.11)**2:L.t*Math.cos(Math.PI/2*(t-pk)/.07)**2}return v}
-const VIEWS={
- p:{name:'P',note:`P всегда (+) во II и (−) в aVR; не шире 0,10 с и не выше 2,5 мм ${SRC(88)}.`,mark:{II:'P (+) всегда',aVR:'P (−)'},el:'P'},
- r:{name:'R и ось',note:`В отведениях от конечностей R<sub>II</sub> > R<sub>I</sub> > R<sub>III</sub> — нормальное положение оси; R<sub>I</sub> > R<sub>II</sub> > R<sub>III</sub> — горизонтальное; максимум в III — отклонение вправо, в aVL — влево ${SRC('92–93')}. Вольтаж достаточный: R<sub>max</sub> > 5 мм и R<sub>I</sub> + R<sub>II</sub> + R<sub>III</sub> > 15 мм ${SRC(91)}.`,num:['I','II','III'],el:'R'},
- rs:{name:'R/S в грудных',note:`В грудных R нарастает от V1 к V4 (максимум), затем снижается к V6; S уменьшается от V1 к V4, в V5–V6 его нет; R = S — переходная зона, в норме V3 ${SRC(89)}.`,num:['V1','V2','V3','V4','V5','V6'],mark:{V3:'R = S',V4:'R max'},el:'R'},
- q:{name:'Q',note:`Маленький q (меньше ¼ R, до 0,03 с) в норме бывает в I, II, aVF, V5–V6; в V1–V3 Q быть не должно; в aVR возможен глубокий Q вплоть до QS ${SRC(88)}.`,mark:{I:'q',II:'q',V5:'q',V6:'q',V1:'нет Q',V2:'нет Q',V3:'нет Q',aVR:'QS — норма'},el:'Q'},
- st:{name:'ST',note:`ST на изолинии; в V1–V3 допустим подъём до 2 мм, в V5–V6 — снижение до 0,5 мм ${SRC(89)}.`,mark:{V1:'до +2 мм',V2:'до +2 мм',V3:'до +2 мм',V5:'до −0,5 мм',V6:'до −0,5 мм'},el:'ST'},
- t:{name:'T',note:`T совпадает по направлению с R, т.е. (+), кроме aVR; в aVL может быть (−) при вертикальной оси, в III — при горизонтальной; T<sub>V6</sub> > T<sub>V1</sub> ${SRC(89)}.`,mark:{aVR:'T (−)',III:'может быть (−)',aVL:'может быть (−)',V1:'T мал',V6:'T > V1'},el:'T'}};
-function partB(root){
-  root.innerHTML=`<div class="ne-chips" role="group" aria-label="Что показать">${Object.entries(VIEWS).map(([k,v])=>`<button type="button" data-v="${k}">${v.name}</button>`).join('')}</div>
-   <div class="qz-strip"><svg id="ne-svgB" class="qz-svg" role="img" aria-label="Нормальная ЭКГ в 12 отведениях"></svg></div><p class="qz-scale">25 мм/с · 10 мм/мВ · по одному комплексу в каждом отведении</p><p class="ne-note" aria-live="polite"></p>`;
-  const svg=root.querySelector('svg'),note=root.querySelector('.ne-note');
-  function draw(vk){const V=VIEWS[vk],cw=17,mm=25;let rows='',y=0;
-    const rowH=GRID[0].map((_,ri)=>{let mx=.3,mn=-.3;GRID.forEach(c=>{const L=LD[c[ri]];mx=Math.max(mx,ext(L.q,1),L.t,L.p);mn=Math.min(mn,ext(L.q,-1),L.t,L.p)});return[mx,mn]});
-    GRID[0].forEach((_,ri)=>{const [mx,mn]=rowH[ri],base=y+6+mx*10,hh=(mx-mn)*10+12;
-      GRID.forEach((c,ci)=>{const l=c[ri],x0=ci*cw;let d='';for(let t=.02;t<=.6;t+=.002)d+=(d?'L':'M')+(x0+(t-.02)*mm).toFixed(2)+' '+(base-leadV(l,t)*10).toFixed(2);
-        let hl='';const q=.2,el=V.el;const rg={P:[q-.16,q-.07],R:[q,q+.09],Q:[q,q+.03],ST:[q+.09,q+.19],T:[q+.19,q+.37]}[el];
-        if(rg){let s='';for(let t=rg[0];t<=rg[1];t+=.001)s+=(s?'L':'M')+(x0+(t-.02)*mm).toFixed(2)+' '+(base-leadV(l,t)*10).toFixed(2);hl=`<path d="${s}" class="ne-hl"/>`}
-        rows+=`<path d="${d}" class="qz-tr"/>${hl}<text x="${x0+1}" y="${y+3.6}" class="ne-ld">${l}</text>`;if(ci)rows+=`<line x1="${x0}" x2="${x0}" y1="${y}" y2="${y+hh}" class="qz-sep"/>`;
-        const m=V.mark&&V.mark[l],nm=V.num&&V.num.includes(l);
-        if(nm){const L=LD[l],r=ext(L.q,1),s=-ext(L.q,-1);rows+=`<text x="${x0+cw-1}" y="${y+3.6}" class="ne-num" text-anchor="end">R ${f1(r*10)}${vk==='rs'?` / S ${f1(s*10)}`:''}</text>`}
-        if(m)rows+=`<text x="${x0+cw-1}" y="${y+hh-1.6}" class="ne-mk" text-anchor="end">${m}</text>`});
-      y+=hh});
-    const W=GRID.length*cw;svg.setAttribute('viewBox',`0 0 ${W} ${y}`);
-    svg.innerHTML=`<defs><pattern id="ne-pB" width="5" height="5" patternUnits="userSpaceOnUse"><path d="M1 0V5M2 0V5M3 0V5M4 0V5M0 1H5M0 2H5M0 3H5M0 4H5" class="qz-g1"/><path d="M0 0H5M0 0V5" class="qz-g5"/></pattern></defs><rect width="${W}" height="${y}" class="qz-bg"/><rect width="${W}" height="${y}" fill="url(#ne-pB)"/>${rows}`;
-    note.innerHTML=V.note;root.querySelectorAll('[data-v]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===vk))}
-  root.querySelector('.ne-chips').addEventListener('click',e=>{const b=e.target.closest('button');if(b)draw(b.dataset.v)});draw('p')}
+function nbHTML(k,mode){const V=V12[k]||{};const hasAbn=Object.keys(V.abn||{}).length;
+  return`${V.note?`<p class="ne-note">${V.note}</p>`:''}<div class="ne-nb"><div class="ne-ok"><h5>Норма</h5><ul>${(V.norm||[]).map(x=>`<li>${x}</li>`).join('')}</ul></div>
+   <div class="ne-no"><h5>Отклонение — что значит</h5><ul>${(V.bad||[]).map(x=>`<li>${x}</li>`).join('')}</ul></div></div>
+   ${mode==='abn'&&!hasAbn?'<p class="ne-note">Для этого элемента отклонение по 12 отведениям не показывается — оно одинаково везде.</p>':''}`}
 /* ---------- C: тренажёр «что подсвечено?» ---------- */
 function partC(root){
   root.innerHTML=`<p class="qz-q"></p><div class="qz-strip ne-wide"><svg id="ne-svgC" class="qz-svg" role="img" aria-label="Лента с подсвеченным элементом"></svg></div><div class="qz-opts"></div><div class="qz-ex" aria-live="polite"></div>
@@ -150,5 +203,5 @@ function partC(root){
     [...opts.children].forEach(x=>{x.disabled=true;if(x.dataset.k===cur)x.classList.add('ok');else if(x===b)x.classList.add('bad')});
     const e2=BYK[cur],w=BYK[b.dataset.k];ex.innerHTML=`<p class="qz-v ${ok?'ok':'bad'}">${ok?'Верно.':'Неверно.'} Это <b>${e2.name}</b>: ${e2.where}</p>${ok?'':`<p class="qz-why"><b>${w.name}</b> — ${w.where}</p>`}<p class="qz-diff">${e2.diff}</p>`;sc.textContent=`верно ${score[0]} из ${score[1]}`});
   root.querySelector('[data-a=n]').addEventListener('click',next);next()}
-window.NormECG=function(o){if(o.a)partA(o.a);if(o.b)partB(o.b);if(o.c)partC(o.c)};
+window.NormECG=function(o){if(o.a)partA(o.a);if(o.c)partC(o.c)};
 })();
