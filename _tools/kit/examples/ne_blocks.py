@@ -62,3 +62,10 @@ CSS+='''
 .nd-sel{fill:none;stroke-width:.6}.nd-sel.pick{stroke:#1d55b0;fill:#1d55b0;fill-opacity:.08}.nd-sel.hit{stroke:#1f6b52;fill:#1f6b52;fill-opacity:.12}.nd-sel.miss{stroke:#c0283a;fill:#c0283a;fill-opacity:.12;stroke-dasharray:1.2 .8}.nd-sel.fa{stroke:#8a5a00;fill:#8a5a00;fill-opacity:.1}
 .nd-act{margin-top:8px}.nd-cnt{font:500 13px var(--mono);color:var(--muted);margin-left:8px}
 '''
+CSS+='''
+.nd-band{opacity:.16}.nd-band.hit,.nd-band.miss{fill:#c0283a}.nd-band.fa{fill:#8a5a00}.nd-band.okn{fill:#1f6b52}
+.nd-hl{fill:none;stroke-width:.75;stroke-linecap:round}.nd-hl.hit,.nd-hl.miss{stroke:#c0283a}.nd-hl.fa{stroke:#8a5a00}.nd-hl.okn{stroke:#1f6b52}
+.nd-st{font:800 2.6px var(--body)}.nd-why{font:700 1.55px var(--body)}
+.nd-st.hit,.nd-st.okn,.nd-why.okn{fill:#1f6b52}.nd-st.miss,.nd-why.hit,.nd-why.miss{fill:#c0283a}.nd-st.fa,.nd-why.fa{fill:#8a5a00}
+@media (max-width:600px){.nd-st{font-size:3px}.nd-why{font-size:1.85px}}
+'''

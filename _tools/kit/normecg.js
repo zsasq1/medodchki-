@@ -241,26 +241,26 @@ function stripII(svg,m,o={}){const t0=-.1,t1=.74,mm=50,X=t=>(t-t0)*mm,base=15,H=
 function medRange(k,m){const g=geo('II',m);return{P:g.P,PQ:g.PQ,Q:[Q0-.004,Q0+.03],R:[Q0+.01,Q0+.07],QRS:g.QRS,ST:g.ST,T:g.T,QT:g.QT}[k]}
 /* сложный уровень: 12 отведений, отметить те, где есть отклонение */
 const ABN=[
- {l:'V2',m:{q:[[0,0],[.025,-.7],[.05,-1.1],[.09,0]]},why:'QS в V2: в V1–V3 Q быть не должно (с. 88)'},
- {l:'V3',m:{q:[[0,0],[.018,-.35],[.04,.5],[.065,-.5],[.09,0]]},why:'Q в V3: в V1–V3 Q быть не должно (с. 88)'},
- {l:'III',m:{q:[[0,0],[.022,-.45],[.048,.45],[.07,-.1],[.09,0]]},why:'Q в III глубже ¼ R и шире 0,03 с — патологический (с. 88)'},
- {l:'V6',m:{q:[[0,0],[.012,-.08],[.038,.8],[.065,-.5],[.09,0]]},why:'S в V6: в V5–V6 S должен отсутствовать (с. 89)'},
- {l:'V5',m:{t:-.3,tSym:true},why:'T (−) в V5, где R положительный (с. 89, 107)'},
- {l:'I',m:{t:-.2,tSym:true},why:'T (−) в I, где R положительный (с. 89)'},
- {l:'II',m:{st:.3,t:.4},why:'подъём ST во II — повреждение (с. 108)'},
- {l:'aVF',m:{st:.3,t:.35},why:'подъём ST в aVF — повреждение (с. 108)'},
- {l:'V5',m:{st:-.15},why:'снижение ST в V5 на 1,5 мм — больше допустимых 0,5 мм (с. 89, 107)'},
- {l:'V2',m:{st:.35,t:.6},why:'подъём ST в V2 на 3,5 мм — больше допустимых 2 мм (с. 89)'},
- {l:'V1',m:{q:[[0,0],[.035,1.0],[.065,-.2],[.09,0]],t:-.2},why:'R в V1 10 мм > 7 мм — признак гипертрофии правого желудочка (с. 106)'},
- {l:'V5',m:{q:[[0,0],[.012,-.08],[.038,2.8],[.075,0]]},why:'R в V5 28 мм > 25 мм — признак гипертрофии левого желудочка (с. 106)'},
- {l:'II',m:{p:.32,pd:.07},why:'P во II 3,2 мм > 2,5 мм, заострённый (с. 88, 104)'},
- {l:'II',m:{p:-.12},why:'P (−) во II — в норме он всегда (+) (с. 88)'},
- {l:'V1',m:{q:[[0,0],[.02,.3],[.05,-.35],[.095,.9],[.14,0]],t:-.2},why:'QRS 0,14 с с расщеплённым R′ в V1 — блокада правой ножки (с. 102)'}];
+ {l:'V2',el:'Q',short:'QS: в V1–V3 Q не бывает',m:{q:[[0,0],[.025,-.7],[.05,-1.1],[.09,0]]},why:'QS в V2: в V1–V3 Q быть не должно (с. 88)'},
+ {l:'V3',el:'Q',short:'Q: в V1–V3 его нет',m:{q:[[0,0],[.018,-.35],[.04,.5],[.065,-.5],[.09,0]]},why:'Q в V3: в V1–V3 Q быть не должно (с. 88)'},
+ {l:'III',el:'Q',short:'Q глубже ¼ R',m:{q:[[0,0],[.022,-.45],[.048,.45],[.07,-.1],[.09,0]]},why:'Q в III глубже ¼ R и шире 0,03 с — патологический (с. 88)'},
+ {l:'V6',el:'S',short:'S: в V5–V6 его нет',m:{q:[[0,0],[.012,-.08],[.038,.8],[.065,-.5],[.09,0]]},why:'S в V6: в V5–V6 S должен отсутствовать (с. 89)'},
+ {l:'V5',el:'T',short:'T (−) при R (+)',m:{t:-.3,tSym:true},why:'T (−) в V5, где R положительный (с. 89, 107)'},
+ {l:'I',el:'T',short:'T (−) при R (+)',m:{t:-.2,tSym:true},why:'T (−) в I, где R положительный (с. 89)'},
+ {l:'II',el:'ST',short:'ST ↑ 3 мм',m:{st:.3,t:.4},why:'подъём ST во II — повреждение (с. 108)'},
+ {l:'aVF',el:'ST',short:'ST ↑ 3 мм',m:{st:.3,t:.35},why:'подъём ST в aVF — повреждение (с. 108)'},
+ {l:'V5',el:'ST',short:'ST ↓ 1,5 мм > 0,5',m:{st:-.15},why:'снижение ST в V5 на 1,5 мм — больше допустимых 0,5 мм (с. 89, 107)'},
+ {l:'V2',el:'ST',short:'ST ↑ 3,5 мм > 2',m:{st:.35,t:.6},why:'подъём ST в V2 на 3,5 мм — больше допустимых 2 мм (с. 89)'},
+ {l:'V1',el:'R',short:'R 10 мм > 7',m:{q:[[0,0],[.035,1.0],[.065,-.2],[.09,0]],t:-.2},why:'R в V1 10 мм > 7 мм — признак гипертрофии правого желудочка (с. 106)'},
+ {l:'V5',el:'R',short:'R 28 мм > 25',m:{q:[[0,0],[.012,-.08],[.038,2.8],[.075,0]]},why:'R в V5 28 мм > 25 мм — признак гипертрофии левого желудочка (с. 106)'},
+ {l:'II',el:'P',short:'P 3,2 мм > 2,5',m:{p:.32,pd:.07},why:'P во II 3,2 мм > 2,5 мм, заострённый (с. 88, 104)'},
+ {l:'II',el:'P',short:'P (−) во II',m:{p:-.12},why:'P (−) во II — в норме он всегда (+) (с. 88)'},
+ {l:'V1',el:'QRS',short:'QRS 0,14 с, R′',m:{q:[[0,0],[.02,.3],[.05,-.35],[.095,.9],[.14,0]],t:-.2},why:'QRS 0,14 с с расщеплённым R′ в V1 — блокада правой ножки (с. 102)'}];
 const DECOY=[
- {l:'III',m:{t:-.1},why:'T (−) в III — в норме бывает при горизонтальной оси (с. 89)'},
- {l:'aVL',m:{t:-.08},why:'T (−) в aVL — в норме бывает при вертикальной оси (с. 89)'},
- {l:'V2',m:{st:.12},why:'подъём ST в V2 на 1,2 мм — в V1–V3 допустимо до 2 мм (с. 89)'},
- {l:'V6',m:{st:-.04},why:'снижение ST в V6 на 0,4 мм — в V5–V6 допустимо до 0,5 мм (с. 89)'}];
+ {l:'III',el:'T',short:'T (−) в III бывает',m:{t:-.1},why:'T (−) в III — в норме бывает при горизонтальной оси (с. 89)'},
+ {l:'aVL',el:'T',short:'T (−) в aVL бывает',m:{t:-.08},why:'T (−) в aVL — в норме бывает при вертикальной оси (с. 89)'},
+ {l:'V2',el:'ST',short:'ST ↑ 1,2 мм ≤ 2',m:{st:.12},why:'подъём ST в V2 на 1,2 мм — в V1–V3 допустимо до 2 мм (с. 89)'},
+ {l:'V6',el:'ST',short:'ST ↓ 0,4 мм ≤ 0,5',m:{st:-.04},why:'снижение ST в V6 на 0,4 мм — в V5–V6 допустимо до 0,5 мм (с. 89)'}];
 const ALWAYS={aVR:'aVR: P (−), QS и T (−) — это норма (с. 88–89)'};
 function grid12(svg,mods,o={}){const cw=18,mm=25;let rows='',y=0;const RB=[];
   const rowR=GRID[0].map((_,ri)=>{let mx=.3,mn=-.3;GRID.forEach(c=>{const l=c[ri];for(let t=TW[0];t<=TW[1];t+=.004){const v=leadV(l,t,mods[l]);mx=Math.max(mx,v);mn=Math.min(mn,v)}});return[mx,mn]});
@@ -270,7 +270,15 @@ function grid12(svg,mods,o={}){const cw=18,mm=25;let rows='',y=0;const RB=[];
       const st=o.state&&o.state[l];
       if(st)rows+=`<rect x="${x0+.4}" y="${y+.4}" width="${cw-.8}" height="${hh-.8}" rx="1" class="nd-sel ${st}"/>`;
       rows+=`<path d="${d}" class="qz-tr"/><text x="${x0+1}" y="${y+3.4}" class="ne-ld">${l}</text>`;if(ci)rows+=`<line x1="${x0}" x2="${x0}" y1="${y}" y2="${y+hh}" class="qz-sep"/>`;
-      if(o.mark&&o.mark[l])rows+=`<text x="${x0+cw-.8}" y="${y+hh-1.3}" class="ne-mk ${o.mark[l][0]}" text-anchor="end">${o.mark[l][1]}</text>`});
+      if(o.mark&&o.mark[l])rows+=`<text x="${x0+cw-.8}" y="${y+hh-1.3}" class="ne-mk ${o.mark[l][0]}" text-anchor="end">${o.mark[l][1]}</text>`;
+      const an=o.ann&&o.ann[l];
+      if(an&&an.tone!=='okn')rows+=`<rect x="${x0+.4}" y="${y+.4}" width="${cw-.8}" height="${hh-.8}" rx="1" class="nd-sel ${an.tone}"/>`;
+      if(an){const g=geo(l,mods[l]),r=an.el==='all'?[TW[0],TW[1]]:{P:g.P,Q:[Q0-.004,Q0+.03],R:[Q0+.01,Q0+.07],S:[Q0+.045,g.QRS[1]],QRS:g.QRS,ST:g.ST,T:g.T}[an.el];
+        if(r&&an.el!=='all'){let sp='';for(let t=r[0];t<=r[1]+1e-9;t+=.001)sp+=(sp?'L':'M')+X(t).toFixed(2)+' '+(base-leadV(l,t,mods[l])*10).toFixed(2);
+          rows+=`<rect x="${X(r[0])}" y="${y}" width="${X(r[1])-X(r[0])}" height="${hh}" class="nd-band ${an.tone}"/><path d="${sp}" class="nd-hl ${an.tone}"/>`}
+        const wrap=(t,n)=>{const w=t.split(' '),L=[];let c='';w.forEach(x=>{if((c+' '+x).trim().length>n&&c){L.push(c);c=x}else c=(c+' '+x).trim()});if(c)L.push(c);return L};
+        if(an.top)rows+=`<text x="${x0+cw-.8}" y="${y+3.4}" class="nd-st ${an.tone}" text-anchor="end">${an.top}</text>`;
+        if(an.bottom){const L=wrap(an.bottom,15);rows+=`<text class="nd-why ${an.tone}" text-anchor="end">${L.map((z,i)=>`<tspan x="${x0+cw-.8}" y="${y+hh-1.2-(L.length-1-i)*1.9}">${z}</tspan>`).join('')}</text>`}}});
     y+=hh});
   const W=GRID.length*cw;svg.setAttribute('viewBox',`0 0 ${W} ${y}`);
   svg.innerHTML=`<defs><pattern id="${svg.id}-p" width="5" height="5" patternUnits="userSpaceOnUse"><path d="M1 0V5M2 0V5M3 0V5M4 0V5M0 1H5M0 2H5M0 3H5M0 4H5" class="qz-g1"/><path d="M0 0H5M0 0V5" class="qz-g5"/></pattern></defs><rect width="${W}" height="${y}" class="qz-bg"/><rect width="${W}" height="${y}" fill="url(#${svg.id}-p)"/>${rows}`;
@@ -303,10 +311,15 @@ function partD(root){
     if(lv===2&&b.dataset.j!=null&&st.phase===2){st.phase=3;const said=b.dataset.j==='1',ok=said===st.v.ok&&st.found;mark(ok);
       [...act.querySelectorAll('.qz-o')].forEach(x=>{x.disabled=true;if((x.dataset.j==='1')===st.v.ok)x.classList.add('ok');else if(x===b)x.classList.add('bad')});
       const e2=BYK[st.k==='PQ'?'PQ':st.k];ex.innerHTML=`<p class="qz-v ${said===st.v.ok?'ok':'bad'}">${said===st.v.ok?'Верно':'Неверно'}: ${st.v.ok?'в норме':'отклонение'}.${st.found?'':' (Элемент сначала был найден не там — задание не засчитано.)'}</p><ul>${st.v.f.map(x=>`<li>${x}</li>`).join('')}</ul><p class="qz-diff"><b>Норма:</b> ${e2.norm.join('; ')} ${SRC(e2.np)}.</p>`}
-    if(lv===3&&b.dataset.a==='check'&&!st.done){st.done=true;const abl=new Set(st.ab.map(a=>a.l)),state={},mk={};let good=0;
-      GRID.flat().forEach(l=>{const pk=st.sel.has(l),ab=abl.has(l);if(ab&&pk){state[l]='hit';mk[l]=['ok','✔ отклонение'];good++}else if(ab){state[l]='miss';mk[l]=['no','пропущено']}else if(pk){state[l]='fa';mk[l]=['may','это норма']}});
-      grid12(svg,st.mods,{state,mark:mk});const ok=good===abl.size&&st.sel.size===abl.size;mark(ok);b.disabled=true;
-      ex.innerHTML=`<p class="qz-v ${ok?'ok':'bad'}">${ok?'Всё верно.':`Найдено ${good} из ${abl.size}${st.sel.size>good?`, лишних отметок: ${st.sel.size-good}`:''}.`}</p><p><b>Отклонения:</b></p><ul>${st.ab.map(a=>`<li><b>${a.l}</b> — ${a.why}</li>`).join('')}</ul><p><b>Выглядит необычно, но это норма:</b></p><ul>${st.dec.map(d=>`<li><b>${d.l}</b> — ${d.why}</li>`).join('')}<li>${ALWAYS.aVR}</li></ul>`}});
+    if(lv===3&&b.dataset.a==='check'&&!st.done){st.done=true;const abm=Object.fromEntries(st.ab.map(a=>[a.l,a])),dcm=Object.fromEntries(st.dec.map(d=>[d.l,d])),ann={};let good=0;
+      GRID.flat().forEach(l=>{const pk=st.sel.has(l),A=abm[l],D=dcm[l];
+        if(A){if(pk)good++;ann[l]={tone:pk?'hit':'miss',el:A.el,top:pk?'✔':'✘',bottom:(pk?'':'пропущено: ')+A.short}}
+        else if(D)ann[l]={tone:pk?'fa':'okn',el:D.el,top:pk?'✘':'✔',bottom:'норма: '+D.short}
+        else if(l==='aVR')ann[l]={tone:pk?'fa':'okn',el:'all',top:pk?'✘':'✔',bottom:'норма: всё (−)'}
+        else if(pk)ann[l]={tone:'fa',el:'all',top:'✘',bottom:'здесь норма'}
+        else ann[l]={tone:'okn',el:'all',top:'✔'}});
+      grid12(svg,st.mods,{ann});const ok=good===st.ab.length&&st.sel.size===st.ab.length;mark(ok);b.disabled=true;
+      ex.innerHTML=`<p class="qz-v ${ok?'ok':'bad'}">${ok?'Всё верно.':`Найдено ${good} из ${st.ab.length}${st.sel.size>good?`, лишних отметок: ${st.sel.size-good}`:''}.`} Ответы — прямо на отведениях: ✔ вы ответили верно, ✘ ошиблись; красным подсвечено отклонение, зелёным — то, что выглядит необычно, но является нормой.</p><p><b>Отклонения:</b></p><ul>${st.ab.map(a=>`<li><b>${a.l}</b> — ${a.why}</li>`).join('')}</ul><p><b>Выглядит необычно, но это норма:</b></p><ul>${st.dec.map(d=>`<li><b>${d.l}</b> — ${d.why}</li>`).join('')}<li>${ALWAYS.aVR}</li></ul>`}});
   root.querySelector('.ne-mode').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;lv=+b.dataset.lv;root.querySelectorAll('[data-lv]').forEach(x=>x.setAttribute('aria-pressed',x===b));next()});
   root.querySelector('[data-a=n]').addEventListener('click',next);next()}
 window.NormECG=function(o){if(o.a)partA(o.a);if(o.c)partC(o.c);if(o.d)partD(o.d)};
