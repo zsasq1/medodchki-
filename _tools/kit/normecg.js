@@ -203,5 +203,111 @@ function partC(root){
     [...opts.children].forEach(x=>{x.disabled=true;if(x.dataset.k===cur)x.classList.add('ok');else if(x===b)x.classList.add('bad')});
     const e2=BYK[cur],w=BYK[b.dataset.k];ex.innerHTML=`<p class="qz-v ${ok?'ok':'bad'}">${ok?'Верно.':'Неверно.'} Это <b>${e2.name}</b>: ${e2.where}</p>${ok?'':`<p class="qz-why"><b>${w.name}</b> — ${w.where}</p>`}<p class="qz-diff">${e2.diff}</p>`;sc.textContent=`верно ${score[0]} из ${score[1]}`});
   root.querySelector('[data-a=n]').addEventListener('click',next);next()}
-window.NormECG=function(o){if(o.a)partA(o.a);if(o.c)partC(o.c)};
+/* ---------- D: тренажёр «найди и оцени» — 3 уровня ---------- */
+const svgPt=(svg,e)=>{const p=svg.createSVGPoint();p.x=e.clientX;p.y=e.clientY;return p.matrixTransform(svg.getScreenCTM().inverse())};
+const NM={P:'зубец P',PQs:'сегмент PQ',PQ:'интервал PQ',Q:'зубец Q',R:'зубец R',S:'зубец S',QRS:'комплекс QRS',ST:'сегмент ST',T:'зубец T',QT:'интервал QRST',iso:'изолинию (отрезок TP)'};
+const NMI={P:'зубец P',PQs:'сегмент PQ',Q:'зубец Q',R:'зубец R',S:'зубец S',ST:'сегмент ST',T:'зубец T',TP:'изолиния TP (между T и следующим P)'};
+function whatAt(B,t){for(let i=0;i<B.length;i++){const b=B[i],n=B[i+1];
+  if(t>=b.P[0]&&t<=b.P[1])return'P';if(t>b.PQs[0]&&t<b.PQs[1])return'PQs';if(t>=b.Q[0]&&t<b.Q[1])return'Q';if(t>=b.R[0]&&t<b.R[1])return'R';if(t>=b.S[0]&&t<=b.S[1])return'S';
+  if(t>b.ST[0]&&t<b.ST[1])return'ST';if(t>=b.T[0]&&t<=b.T[1])return'T';if(n&&t>b.T[1]&&t<n.P[0])return'TP';if(!n&&t>b.T[1])return'TP'}return'TP'}
+function hitEasy(B,k,t){const tol=k==='Q'?.012:.006;return B.some((b,i)=>{if(k==='iso'){const n=B[i+1];return(t>b.PQs[0]-tol&&t<b.PQs[1]+tol)||(n&&t>b.T[1]-tol&&t<n.P[0]+tol)}const r=b[k];return r&&t>=r[0]-tol&&t<=r[1]+tol})}
+/* средний уровень: II отведение, элемент может быть в норме или с отклонением */
+const pick=a=>a[Math.floor(Math.random()*a.length)],rnd=(a,b)=>a+Math.random()*(b-a);
+const MED={
+ P:()=>pick([()=>{const d=rnd(.07,.1),a=rnd(.1,.22);return{m:{pd:d,p:a},ok:true,f:[`P ${f2(d)} с (≤ 0,10), ${f1(a*10)} мм (≤ 2,5), (+), округлый`]}},
+   ()=>({m:{pd:.07,p:.32},ok:false,f:['P 3,2 мм > 2,5 мм, заострённый — как при P-pulmonale (с. 88, 104)']}),
+   ()=>({m:{p:-.12},ok:false,f:['P (−) во II — ритм не синусовый (с. 88, 90)']}),
+   ()=>({m:{pd:.12,p:.11,pBif:true},ok:false,f:['P 0,12 с > 0,10 с, двугорбый — как при P-mitrale (с. 88, 105)']})])(),
+ PQ:()=>pick([()=>{const v=rnd(.13,.19);return{m:{pq:v},ok:true,f:[`PQ ${f2(v)} с — в пределах 0,12–0,20`]}},()=>{const v=rnd(.13,.19);return{m:{pq:v},ok:true,f:[`PQ ${f2(v)} с — в пределах 0,12–0,20`]}},
+   ()=>{const v=rnd(.25,.32);return{m:{pq:v},ok:false,f:[`PQ ${f2(v)} с > 0,20 — AV-блокада I степени (с. 101)`]}},()=>({m:{pq:.09},ok:false,f:['PQ 0,09 с < 0,12 — предсердный ритм или WPW (с. 95, 104)']})])(),
+ Q:()=>pick([()=>({m:{},ok:true,f:['Q 1 мм при R 11 мм — меньше ¼ R; ширина ≈ 0,02 с (≤ 0,03)']}),
+   ()=>({m:{q:[[0,0],[.022,-.45],[.048,.6],[.072,-.2],[.09,0]]},ok:false,f:['Q 4,5 мм при R 6 мм — глубже ¼ R, шире 0,03 с: патологический Q (с. 88, 108)']})])(),
+ R:()=>pick([()=>{const a=rnd(.7,1.4);return{m:{q:[[0,0],[.012,-.1],[.04,a],[.065,-.25],[.09,0]]},ok:true,f:[`R ${f1(a*10)} мм — в пределах 5–15 мм, остроконечный`]}},
+   ()=>({m:{q:[[0,0],[.012,-.1],[.035,1.0],[.045,.72],[.055,1.0],[.075,-.2],[.09,0]]},ok:false,f:['R с зазубриной — в норме он остроконечный, без зазубрин (с. 89)']}),
+   ()=>({m:{q:[[0,0],[.012,-.05],[.04,.35],[.065,-.1],[.09,0]]},ok:false,f:['R 3,5 мм < 5 мм — меньше нормы 5–15 мм (с. 89; вольтаж — с. 91)']})])(),
+ QRS:()=>pick([()=>({m:{},ok:true,f:['QRS 0,09 с — в пределах 0,06–0,10']}),
+   ()=>({m:{q:[[0,0],[.03,.4],[.06,-.3],[.1,.9],[.14,0]],t:-.2},ok:false,f:['QRS 0,14 с > 0,10 (> 0,12 — полная блокада ножки, с. 102)']})])(),
+ ST:()=>pick([()=>({m:{},ok:true,f:['ST на изолинии']}),()=>({m:{st:.28,t:.4},ok:false,f:['ST поднят на 2,8 мм — повреждение (с. 108)']}),()=>({m:{st:-.15},ok:false,f:['ST снижен на 1,5 мм — больше 1 мм: ишемия (с. 107)']})])(),
+ T:()=>pick([()=>{const a=rnd(.2,.4);return{m:{t:a},ok:true,f:[`T (+), ${f1(a*10)} мм, асимметричный — как и должно быть во II`]}},
+   ()=>({m:{t:-.25,tSym:true},ok:false,f:['T (−) во II, где R положительный (с. 89, 107)']}),()=>({m:{t:.75,tSym:true},ok:false,f:['T 7,5 мм, симметричный, острый — больше 5 мм в отведениях от конечностей; признак ишемии (с. 89, 107)']})])(),
+ QT:()=>pick([()=>({m:{},ok:true,f:['QRST ≈ 0,37 с — до 0,40']}),()=>({m:{tShift:.11},ok:false,f:['QRST ≈ 0,48 с > 0,40 (с. 89)']})])()};
+function stripII(svg,m,o={}){const t0=-.1,t1=.74,mm=50,X=t=>(t-t0)*mm,base=15,H=26;let d='';
+  for(let t=t0;t<=t1+1e-9;t+=.001)d+=(d?'L':'M')+X(t).toFixed(2)+' '+(base-leadV('II',t,m)*10).toFixed(2);
+  let g='';if(o.band)o.band.forEach(r=>{g+=`<rect x="${X(r[0])}" y="0" width="${X(r[1])-X(r[0])}" height="${H}" class="ne-band ok"/>`});
+  if(o.tap)g+=`<circle cx="${o.tap.x}" cy="${o.tap.y}" r="1.2" class="nd-tap ${o.tap.ok?'ok':'no'}"/>`;
+  svg.setAttribute('viewBox',`0 0 ${X(t1)} ${H}`);
+  svg.innerHTML=`<defs><pattern id="${svg.id}-p" width="5" height="5" patternUnits="userSpaceOnUse"><path d="M1 0V5M2 0V5M3 0V5M4 0V5M0 1H5M0 2H5M0 3H5M0 4H5" class="qz-g1"/><path d="M0 0H5M0 0V5" class="qz-g5"/></pattern></defs><rect width="${X(t1)}" height="${H}" class="qz-bg"/><rect width="${X(t1)}" height="${H}" fill="url(#${svg.id}-p)"/>${g}<path d="${d}" class="qz-tr"/>`;
+  return{t:x=>x/mm+t0}}
+function medRange(k,m){const g=geo('II',m);return{P:g.P,PQ:g.PQ,Q:[Q0-.004,Q0+.03],R:[Q0+.01,Q0+.07],QRS:g.QRS,ST:g.ST,T:g.T,QT:g.QT}[k]}
+/* сложный уровень: 12 отведений, отметить те, где есть отклонение */
+const ABN=[
+ {l:'V2',m:{q:[[0,0],[.025,-.7],[.05,-1.1],[.09,0]]},why:'QS в V2: в V1–V3 Q быть не должно (с. 88)'},
+ {l:'V3',m:{q:[[0,0],[.018,-.35],[.04,.5],[.065,-.5],[.09,0]]},why:'Q в V3: в V1–V3 Q быть не должно (с. 88)'},
+ {l:'III',m:{q:[[0,0],[.022,-.45],[.048,.45],[.07,-.1],[.09,0]]},why:'Q в III глубже ¼ R и шире 0,03 с — патологический (с. 88)'},
+ {l:'V6',m:{q:[[0,0],[.012,-.08],[.038,.8],[.065,-.5],[.09,0]]},why:'S в V6: в V5–V6 S должен отсутствовать (с. 89)'},
+ {l:'V5',m:{t:-.3,tSym:true},why:'T (−) в V5, где R положительный (с. 89, 107)'},
+ {l:'I',m:{t:-.2,tSym:true},why:'T (−) в I, где R положительный (с. 89)'},
+ {l:'II',m:{st:.3,t:.4},why:'подъём ST во II — повреждение (с. 108)'},
+ {l:'aVF',m:{st:.3,t:.35},why:'подъём ST в aVF — повреждение (с. 108)'},
+ {l:'V5',m:{st:-.15},why:'снижение ST в V5 на 1,5 мм — больше допустимых 0,5 мм (с. 89, 107)'},
+ {l:'V2',m:{st:.35,t:.6},why:'подъём ST в V2 на 3,5 мм — больше допустимых 2 мм (с. 89)'},
+ {l:'V1',m:{q:[[0,0],[.035,1.0],[.065,-.2],[.09,0]],t:-.2},why:'R в V1 10 мм > 7 мм — признак гипертрофии правого желудочка (с. 106)'},
+ {l:'V5',m:{q:[[0,0],[.012,-.08],[.038,2.8],[.075,0]]},why:'R в V5 28 мм > 25 мм — признак гипертрофии левого желудочка (с. 106)'},
+ {l:'II',m:{p:.32,pd:.07},why:'P во II 3,2 мм > 2,5 мм, заострённый (с. 88, 104)'},
+ {l:'II',m:{p:-.12},why:'P (−) во II — в норме он всегда (+) (с. 88)'},
+ {l:'V1',m:{q:[[0,0],[.02,.3],[.05,-.35],[.095,.9],[.14,0]],t:-.2},why:'QRS 0,14 с с расщеплённым R′ в V1 — блокада правой ножки (с. 102)'}];
+const DECOY=[
+ {l:'III',m:{t:-.1},why:'T (−) в III — в норме бывает при горизонтальной оси (с. 89)'},
+ {l:'aVL',m:{t:-.08},why:'T (−) в aVL — в норме бывает при вертикальной оси (с. 89)'},
+ {l:'V2',m:{st:.12},why:'подъём ST в V2 на 1,2 мм — в V1–V3 допустимо до 2 мм (с. 89)'},
+ {l:'V6',m:{st:-.04},why:'снижение ST в V6 на 0,4 мм — в V5–V6 допустимо до 0,5 мм (с. 89)'}];
+const ALWAYS={aVR:'aVR: P (−), QS и T (−) — это норма (с. 88–89)'};
+function grid12(svg,mods,o={}){const cw=18,mm=25;let rows='',y=0;const RB=[];
+  const rowR=GRID[0].map((_,ri)=>{let mx=.3,mn=-.3;GRID.forEach(c=>{const l=c[ri];for(let t=TW[0];t<=TW[1];t+=.004){const v=leadV(l,t,mods[l]);mx=Math.max(mx,v);mn=Math.min(mn,v)}});return[mx,mn]});
+  GRID[0].forEach((_,ri)=>{const [mx,mn]=rowR[ri],base=y+5+mx*10,hh=(mx-mn)*10+10;RB.push([y,hh]);
+    GRID.forEach((c,ci)=>{const l=c[ri],x0=ci*cw,X=t=>x0+(t-TW[0])*mm;let d='';
+      for(let t=TW[0];t<=TW[1]+1e-9;t+=.002)d+=(d?'L':'M')+X(t).toFixed(2)+' '+(base-leadV(l,t,mods[l])*10).toFixed(2);
+      const st=o.state&&o.state[l];
+      if(st)rows+=`<rect x="${x0+.4}" y="${y+.4}" width="${cw-.8}" height="${hh-.8}" rx="1" class="nd-sel ${st}"/>`;
+      rows+=`<path d="${d}" class="qz-tr"/><text x="${x0+1}" y="${y+3.4}" class="ne-ld">${l}</text>`;if(ci)rows+=`<line x1="${x0}" x2="${x0}" y1="${y}" y2="${y+hh}" class="qz-sep"/>`;
+      if(o.mark&&o.mark[l])rows+=`<text x="${x0+cw-.8}" y="${y+hh-1.3}" class="ne-mk ${o.mark[l][0]}" text-anchor="end">${o.mark[l][1]}</text>`});
+    y+=hh});
+  const W=GRID.length*cw;svg.setAttribute('viewBox',`0 0 ${W} ${y}`);
+  svg.innerHTML=`<defs><pattern id="${svg.id}-p" width="5" height="5" patternUnits="userSpaceOnUse"><path d="M1 0V5M2 0V5M3 0V5M4 0V5M0 1H5M0 2H5M0 3H5M0 4H5" class="qz-g1"/><path d="M0 0H5M0 0V5" class="qz-g5"/></pattern></defs><rect width="${W}" height="${y}" class="qz-bg"/><rect width="${W}" height="${y}" fill="url(#${svg.id}-p)"/>${rows}`;
+  return{lead:(x,yy)=>{const ci=Math.floor(x/cw),ri=RB.findIndex(([a,h])=>yy>=a&&yy<a+h);return ci>=0&&ci<4&&ri>=0?GRID[ci][ri]:null}}}
+function partD(root){
+  root.innerHTML=`<div class="nd-top"><div class="ne-mode" role="group" aria-label="Уровень"><button type="button" data-lv="1" aria-pressed="true">Лёгкий</button><button type="button" data-lv="2" aria-pressed="false">Средний</button><button type="button" data-lv="3" aria-pressed="false">Сложный</button></div><span class="qz-sc"></span></div>
+   <p class="nd-lvl"></p><p class="qz-q"></p><div class="qz-strip nd-strip"><svg id="nd-svg" class="qz-svg" role="img" aria-label="Лента ЭКГ: нажмите на нужное место"></svg></div>
+   <div class="nd-act"></div><div class="qz-ex" aria-live="polite"></div><div class="qz-nav"><button type="button" class="qz-next" data-a="n">Следующее задание →</button></div>`;
+  const svg=root.querySelector('svg'),q=root.querySelector('.qz-q'),ex=root.querySelector('.qz-ex'),act=root.querySelector('.nd-act'),sc=root.querySelector('.qz-sc'),lvl=root.querySelector('.nd-lvl');
+  let lv=1,st=null,score={1:[0,0],2:[0,0],3:[0,0]};
+  const LVTXT={1:'Лёгкий: нормальная ЭКГ во II отведении. Нажмите прямо на кривой туда, где находится названный элемент.',2:'Средний: сначала найдите элемент, затем решите — он в норме или с отклонением. Меряйте по клеткам: 50 мм/с, маленькая клетка = 0,02 с и 0,1 мВ (1 мм).',3:'Сложный: 12 отведений. Нажмите на все отведения, где есть отклонение (повторное нажатие снимает отметку), затем «Проверить». Осторожно: часть необычных картин — вариант нормы.'};
+  const upd=()=>{const s=score[lv];sc.textContent=`верно ${s[0]} из ${s[1]}`;lvl.textContent=LVTXT[lv]};
+  const mark=ok=>{score[lv][1]++;if(ok)score[lv][0]++;upd()};
+  function next(){ex.innerHTML='';act.innerHTML='';
+    if(lv===1){const k=pick(['P','PQs','Q','R','S','QRS','ST','T','iso']),rr=60/rnd(60,85),qs=[.3,.3+rr];const t0=.1,t1=qs[1]-.06;const S=drawA(svg,{qs,t0,t1,mmps:50,letters:false,labels:false});svg.style.minWidth=Math.round((t1-t0)*50*9)+'px';st={k,qs,B:S.B,done:false,t0,t1};q.innerHTML=`Нажмите на <b>${NM[k]}</b>.`}
+    if(lv===2){const k=pick(Object.keys(MED)),v=MED[k]();const map=stripII(svg,v.m);svg.style.minWidth=Math.round(42*9)+'px';st={k,v,map,phase:1};q.innerHTML=`Шаг 1. Нажмите на <b>${NM[k]}</b>.`}
+    if(lv===3){svg.style.minWidth='';const n=pick([1,1,2,2,3]),used=new Set(),mods={},ab=[];for(const a of [...ABN].sort(()=>Math.random()-.5)){if(ab.length>=n)break;if(used.has(a.l))continue;used.add(a.l);mods[a.l]=a.m;ab.push(a)}
+      const dec=[...DECOY].sort(()=>Math.random()-.5).filter(d=>!used.has(d.l)).slice(0,pick([1,2]));dec.forEach(d=>{mods[d.l]=d.m});
+      st={ab,dec,mods,sel:new Set(),done:false};st.map=grid12(svg,mods,{});q.innerHTML='Отметьте отведения с отклонением от нормы.';act.innerHTML='<button type="button" class="qz-next" data-a="check">Проверить</button> <span class="nd-cnt">отмечено: 0</span>'}
+    upd()}
+  svg.addEventListener('click',e=>{if(!st)return;const p=svgPt(svg,e);
+    if(lv===1&&!st.done){st.done=true;const t=p.x/50+st.t0,ok=hitEasy(st.B,st.k,t),at=whatAt(st.B,t);mark(ok);
+      drawA(svg,{qs:st.qs,t0:st.t0,t1:st.t1,mmps:50,sel:st.k,letters:true});svg.insertAdjacentHTML('beforeend',`<circle cx="${p.x}" cy="${p.y}" r="1.2" class="nd-tap ${ok?'ok':'no'}"/>`);
+      ex.innerHTML=`<p class="qz-v ${ok?'ok':'bad'}">${ok?'Верно.':'Мимо.'} ${ok?'':`Вы нажали на ${at==='TP'?'изолинию TP':NMI[at]||at}. `}Подсвечен ${NM[st.k]}: ${BYK[st.k==='iso'?'iso':st.k].where}</p>`}
+    else if(lv===2&&st.phase===1){const t=st.map.t(p.x),r=medRange(st.k,st.v.m),tol=st.k==='Q'?.012:.008,ok=t>=r[0]-tol&&t<=r[1]+tol;st.phase=2;st.found=ok;
+      stripII(svg,st.v.m,{band:[r],tap:{x:p.x,y:p.y,ok}});q.innerHTML=`${ok?'✔ Нашли.':'✘ Не там — правильное место подсвечено.'} Шаг 2. ${NM[st.k][0].toUpperCase()+NM[st.k].slice(1)} в норме?`;
+      act.innerHTML='<div class="qz-opts"><button type="button" class="qz-o" data-j="1">Норма</button><button type="button" class="qz-o" data-j="0">Отклонение</button></div>'}
+    else if(lv===3&&!st.done){const l=st.map.lead(p.x,p.y);if(!l)return;st.sel.has(l)?st.sel.delete(l):st.sel.add(l);const state={};st.sel.forEach(x=>state[x]='pick');st.map=grid12(svg,st.mods,{state});act.querySelector('.nd-cnt').textContent=`отмечено: ${st.sel.size}`}});
+  act.addEventListener('click',e=>{const b=e.target.closest('button');if(!b||!st)return;
+    if(lv===2&&b.dataset.j!=null&&st.phase===2){st.phase=3;const said=b.dataset.j==='1',ok=said===st.v.ok&&st.found;mark(ok);
+      [...act.querySelectorAll('.qz-o')].forEach(x=>{x.disabled=true;if((x.dataset.j==='1')===st.v.ok)x.classList.add('ok');else if(x===b)x.classList.add('bad')});
+      const e2=BYK[st.k==='PQ'?'PQ':st.k];ex.innerHTML=`<p class="qz-v ${said===st.v.ok?'ok':'bad'}">${said===st.v.ok?'Верно':'Неверно'}: ${st.v.ok?'в норме':'отклонение'}.${st.found?'':' (Элемент сначала был найден не там — задание не засчитано.)'}</p><ul>${st.v.f.map(x=>`<li>${x}</li>`).join('')}</ul><p class="qz-diff"><b>Норма:</b> ${e2.norm.join('; ')} ${SRC(e2.np)}.</p>`}
+    if(lv===3&&b.dataset.a==='check'&&!st.done){st.done=true;const abl=new Set(st.ab.map(a=>a.l)),state={},mk={};let good=0;
+      GRID.flat().forEach(l=>{const pk=st.sel.has(l),ab=abl.has(l);if(ab&&pk){state[l]='hit';mk[l]=['ok','✔ отклонение'];good++}else if(ab){state[l]='miss';mk[l]=['no','пропущено']}else if(pk){state[l]='fa';mk[l]=['may','это норма']}});
+      grid12(svg,st.mods,{state,mark:mk});const ok=good===abl.size&&st.sel.size===abl.size;mark(ok);b.disabled=true;
+      ex.innerHTML=`<p class="qz-v ${ok?'ok':'bad'}">${ok?'Всё верно.':`Найдено ${good} из ${abl.size}${st.sel.size>good?`, лишних отметок: ${st.sel.size-good}`:''}.`}</p><p><b>Отклонения:</b></p><ul>${st.ab.map(a=>`<li><b>${a.l}</b> — ${a.why}</li>`).join('')}</ul><p><b>Выглядит необычно, но это норма:</b></p><ul>${st.dec.map(d=>`<li><b>${d.l}</b> — ${d.why}</li>`).join('')}<li>${ALWAYS.aVR}</li></ul>`}});
+  root.querySelector('.ne-mode').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;lv=+b.dataset.lv;root.querySelectorAll('[data-lv]').forEach(x=>x.setAttribute('aria-pressed',x===b));next()});
+  root.querySelector('[data-a=n]').addEventListener('click',next);next()}
+window.NormECG=function(o){if(o.a)partA(o.a);if(o.c)partC(o.c);if(o.d)partD(o.d)};
 })();

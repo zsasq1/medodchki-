@@ -16,6 +16,9 @@ SEC='''
   <p><b>Порядок одного цикла:</b> P → сегмент PQ (изолиния) → Q → R → S → сегмент ST (изолиния) → T → изолиния до следующего P.</p>
   <h3>Проверь себя: что подсвечено?</h3>
   <figure class="gx ne"><div class="figbar">Тренажёр · частота меняется от ленты к ленте</div><div id="ne-c"></div></figure>
+  <h3>Тренажёр: найди и оцени — три уровня</h3>
+  <p>Нажимайте прямо на ленту. <b>Лёгкий</b> — найти зубец или сегмент на нормальной ЭКГ. <b>Средний</b> — найти элемент и решить, в норме он или нет (меряйте по клеткам). <b>Сложный</b> — в 12 отведениях отметить все отведения с отклонением; среди них попадаются варианты нормы, которые выглядят подозрительно.</p>
+  <figure class="gx ne"><div class="figbar">Тренажёр · задания генерируются заново, критерии — кардио.pdf, с. 88–111</div><div id="ne-d"></div></figure>
 '''
 CSS='''
 .ne-chips{display:flex;flex-wrap:wrap;gap:6px}.ne-chips button{font-size:13px;padding:3px 9px}
@@ -50,4 +53,12 @@ CSS+='''
 .ne-nb>div{border:1px solid var(--line);border-radius:8px;padding:8px 10px}.ne-nb h5{margin:0 0 4px;font-size:14px}.ne-nb ul{margin:0;padding-left:1.1em}
 .ne-ok{border-left:4px solid var(--ok,#1f6b52)!important}.ne-no{border-left:4px solid var(--hot,#c0283a)!important}
 @media (max-width:600px){.ne-mk{font-size:2.1px}}
+'''
+CSS+='''
+.nd-top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px}.nd-lvl{font-size:14px;color:var(--muted);margin:6px 0 0}
+.nd-strip .qz-svg{max-width:760px;margin:0 auto;cursor:crosshair}.nd-strip .qz-tr{stroke-width:.32}
+.nd-tap{stroke:#fff;stroke-width:.35}.nd-tap.ok{fill:#1f6b52}.nd-tap.no{fill:#c0283a}
+.ne-band.ok{fill:#1f6b52;opacity:.18}
+.nd-sel{fill:none;stroke-width:.6}.nd-sel.pick{stroke:#1d55b0;fill:#1d55b0;fill-opacity:.08}.nd-sel.hit{stroke:#1f6b52;fill:#1f6b52;fill-opacity:.12}.nd-sel.miss{stroke:#c0283a;fill:#c0283a;fill-opacity:.12;stroke-dasharray:1.2 .8}.nd-sel.fa{stroke:#8a5a00;fill:#8a5a00;fill-opacity:.1}
+.nd-act{margin-top:8px}.nd-cnt{font:500 13px var(--mono);color:var(--muted);margin-left:8px}
 '''
